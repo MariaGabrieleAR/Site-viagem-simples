@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "..\\Estudos\\html-css\\Exercicios\\Ex 003"
+		},
+		{
+			"path": "..\\Estudos\\html-css\\Exercicios\\Viagem"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Viagem"
+	}
+}
