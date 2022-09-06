@@ -153,13 +153,14 @@ header nav ul li {
 }
 
 .servicos .servicos-cards {
+    align-items: center;
     margin-top: 25px;
     display: flex;
     flex-direction: row;
     max-width: 950px;
     justify-content: center;
     margin: auto;
-    //*flex-wrap: wrap;*//
+    flex-wrap: wrap;
 }
 
 .servicos .card {
