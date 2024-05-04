@@ -1,0 +1,42 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+    types: [opened]
+
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t minha-aplicacao .
+
+      - name: Test Docker image
+        run: |
+         docker run -d -p 3000:3000 gaabimgb/minha-aplicacao:latest
+          sleep 10
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000)
+          if [ $response -eq 200 ]; then
+            echo "Teste passou: Aplicação está respondendo corretamente."
+          else
+            echo "Teste falhou: Aplicação não está respondendo corretamente. Código de resposta HTTP: $response"
+            exit 1
+          fi
+
+  notify-discord:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "content": "New PR opened!\nTitle: ${{ github.event.pull_request.title }}\nNumber: ${{ github.event.pull_request.number }}\nBy: ${{ github.event.pull_request.user.login }}\nURL: ${{ github.event.pull_request.html_url }}"
+          }' $DISCORD_WEBHOOK
